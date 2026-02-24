@@ -1,0 +1,23 @@
+# See https://github.com/unitycatalog/unitycatalog/blob/main/compose.yaml for the full compose file.
+name: unitycatalog
+
+services:
+
+  unitycatalog:
+    image: unitycatalog/unitycatalog:main-3172b4c
+    hostname: unitycatalog
+    container_name: unitycatalog
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: ./etc/conf/server.properties
+        target: /opt/unitycatalog/etc/conf/server.properties
+      
+      - type: volume
+        source: unitycatalog_data
+        target: /opt/unitycatalog/etc/data
+
+volumes:
+  # Persist docker volume across container restarts
+  unitycatalog_data:

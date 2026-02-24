@@ -8,5 +8,4 @@ dependencies = [
     "delta-spark==4.1.0",
     "marimo[recommended]>=0.20.1",
     "pyspark==4.1.1",
-    "unitycatalog-client==0.4.0",
 ]

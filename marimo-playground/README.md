@@ -17,26 +17,11 @@ Notebooks live in the `notebooks/` directory. Use `uv run` so marimo picks up th
 
 ```bash
 # Open an existing notebook
-uv run marimo edit notebooks/<notebook-name>.py
+uv run marimo edit notebooks/unitycatalog-delta.py
 
 # Create a new notebook
 uv run marimo edit notebooks/my_new_notebook.py
 
 # Run a notebook as a read-only app
-uv run marimo run notebooks/<notebook-name>.py
+uv run marimo run notebooks/unitycatalog-delta.py
 ```
-
-## Dependencies
-
-Installed with `marimo[recommended]`, which includes:
-
-| Package | Feature |
-|---|---|
-| `duckdb` | SQL cells |
-| `altair` | Plotting in datasource viewer |
-| `polars` | SQL output back in Python |
-| `sqlglot` | SQL cell parsing |
-| `openai` | AI features |
-| `ruff` | Formatting |
-| `nbformat` | Export as `.ipynb` |
-| `vegafusion` | Performant charting |
