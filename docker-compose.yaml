@@ -12,11 +12,31 @@ services:
     volumes:
       - type: bind
         source: ./etc/conf/server.properties
-        target: /opt/unitycatalog/etc/conf/server.properties
-      
+        target: /home/unitycatalog/etc/conf/server.properties
+      # todo add a long-term database here since it can 
+      # trip up the process when spinning the environment back up.
       - type: volume
         source: unitycatalog_data
-        target: /opt/unitycatalog/etc/data
+        target: /home/unitycatalog/etc/data
+    networks:
+      - unity
+
+  marimo-spark:
+    image: marimo-spark:latest
+    hostname: marimo-spark
+    container_name: marimo-spark
+    #volumes:
+    #  - type: bind
+    #    source: ./marimo-playground/notebooks/
+    #    target: /marimo-playground/notebooks/
+    ports:
+      - "2718:2718"
+    networks:
+      - unity
+
+networks:
+  unity:
+    driver: bridge
 
 volumes:
   # Persist docker volume across container restarts

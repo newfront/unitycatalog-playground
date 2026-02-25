@@ -61,7 +61,8 @@ def _():
 
 @app.cell
 def _():
-    unity_catalog_server_url = "http://localhost:8080"
+    # if you're running this without the docker compose file, you'll need to change this to the url of your Unity Catalog server
+    unity_catalog_server_url = "http://unitycatalog:8080"
 
     catalog = 'unity'
     schema = 'default'
@@ -106,6 +107,12 @@ def _(mo):
     1. We `should` create a new `Schema` in our `catalog` called `sanctuary`. This is where we will track the animals we are rescuing and their current status.
     2. Once we have our `unity.sanctuary` location created, we can start to work with our Pet data.
     """)
+    return
+
+
+@app.cell
+def _(spark: "SparkSession"):
+    spark.catalog.listCatalogs()
     return
 
 
@@ -492,6 +499,34 @@ def _(mo):
 def _(dt):
     # this will fail at this point in time (Delta 4.1 with Unity Catalog 0.4.0)
     dt.vacuum()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Cleaning up Tables and Schemas
+    When you are all done with your table and it is time to retire it. Then you'll need to delete the table (or tables) prior to removing the schema from Unity Catalog.
+
+    1. Let's drop the `unity.sanctuary.pets` first
+    2. Then we can remove the `schema` (`unity.sanctuary`)
+
+    Just enable the disabled cells (using the `...`) icon and run them.
+    """)
+    return
+
+
+@app.cell(disabled=True)
+def _(spark: "SparkSession"):
+    spark.sql(f"""
+    DROP TABLE unity.sanctuary.pets
+    """)
+    return
+
+
+@app.cell(disabled=True)
+def _(spark: "SparkSession"):
+    spark.sql("DROP SCHEMA unity.sanctuary")
     return
 
 
