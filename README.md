@@ -13,6 +13,23 @@ docker build -t marimo-spark .
 ```bash
 docker compose up
 ```
+You will see the `marimo` and `unitycatalog` containers come up.
+<img width="683" height="296" alt="Screenshot 2026-02-25 at 5 39 34 PM" src="https://github.com/user-attachments/assets/ae7d8393-3bdc-4d70-9630-ac2b875b5ba4" />
+
+In order to run the full notebook environment, copy the ➜  URL: http://0.0.0.0:2718?access_token=TOKEN and run it in your favorite browser.
+
+## Using the Notebook
+Once you're in the notebook environment (marimo), you simply need to **run** each cell in order (you can skip the markdown cells since they are just there to add additional context). 
+
+You'll see a view like the one below:
+
+<img width="1008" height="1184" alt="Screenshot 2026-02-25 at 5 40 31 PM" src="https://github.com/user-attachments/assets/14a50e3f-f4dc-4b69-9ee4-3edb54e8e48e"/>
+
+<br>
+<br>
+When you are finished with the notebook example, you can simple **tear down the environment**. 
+
+Congrats. You've now officially written a Catalog Managed Table using Delta Lake and Unity Catalog.
 
 ## Tear Down the Environment
 
