@@ -74,7 +74,7 @@ def _(DELTA_VERSION, UNITY_CATALOG_VERSION, catalog, unity_catalog_server_url):
     config = {
         "spark.jars.packages": f"io.delta:delta-spark_4.1_2.13:{DELTA_VERSION},io.unitycatalog:unitycatalog-spark_2.13:{UNITY_CATALOG_VERSION}",
         "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
-        "spark.sql.catalog.spark_catalog": "io.unitycatalog.spark.UCSingleCatalog",
+        "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
         f"spark.sql.catalog.{catalog}": "io.unitycatalog.spark.UCSingleCatalog",
         f"spark.sql.catalog.{catalog}.uri": unity_catalog_server_url,
         f"spark.sql.catalog.{catalog}.token": "",
@@ -107,12 +107,6 @@ def _(mo):
     1. We `should` create a new `Schema` in our `catalog` called `sanctuary`. This is where we will track the animals we are rescuing and their current status.
     2. Once we have our `unity.sanctuary` location created, we can start to work with our Pet data.
     """)
-    return
-
-
-@app.cell
-def _(spark: "SparkSession"):
-    spark.catalog.listCatalogs()
     return
 
 

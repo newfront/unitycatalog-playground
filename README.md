@@ -14,6 +14,14 @@ docker build -t marimo-spark .
 docker compose up
 ```
 
+## Tear Down the Environment
+
+To stop and remove all containers, networks, and persistent volumes:
+
+```bash
+docker compose down --volumes --remove-orphans
+```
+
 ## Catalog Managed Tables — Python Helpers
 
 The helper module at [`delta/python/catalog-managed.py`](delta/python/catalog-managed.py) provides a set of reusable utilities for creating and populating catalog-managed Delta tables via PySpark. These same helpers are used interactively in the [`marimo-playground/notebooks/unitycatalog-delta.py`](marimo-playground/notebooks/unitycatalog-delta.py) notebook.
