@@ -3,6 +3,17 @@ This project makes use of the open source Unity Catalog project and introduces a
 
 ---
 
+## Build the Docker Environment
+
+```bash
+docker build -t marimo-spark .
+```
+
+## Run the Environment
+```bash
+docker compose up
+```
+
 ## Catalog Managed Tables — Python Helpers
 
 The helper module at [`delta/python/catalog-managed.py`](delta/python/catalog-managed.py) provides a set of reusable utilities for creating and populating catalog-managed Delta tables via PySpark. These same helpers are used interactively in the [`marimo-playground/notebooks/unitycatalog-delta.py`](marimo-playground/notebooks/unitycatalog-delta.py) notebook.
