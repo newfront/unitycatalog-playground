@@ -25,10 +25,10 @@ services:
     image: marimo-spark:latest
     hostname: marimo-spark
     container_name: marimo-spark
-    #volumes:
-    #  - type: bind
-    #    source: ./marimo-playground/notebooks/
-    #    target: /marimo-playground/notebooks/
+    volumes:
+      - type: bind
+        source: ./marimo-playground/notebooks/
+        target: /marimo-playground/notebooks/
     ports:
       - "2718:2718"
     networks:
