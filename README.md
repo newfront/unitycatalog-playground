@@ -9,6 +9,9 @@ This project makes use of the open source Unity Catalog project and introduces a
 docker build -t marimo-spark .
 ```
 
+> note: If you need to build this with a custom pip proxy, 
+> you can use the --build-arg PIP_INDEX_URL=https://pypi-proxy.your-company.com/simple
+
 ## Run the Environment
 ```bash
 docker compose up
