@@ -4,7 +4,7 @@ name: unitycatalog
 services:
 
   unitycatalog:
-    image: unitycatalog/unitycatalog:main-3172b4c
+    image: newfrontdocker/unitycatalog:v0.4.1
     hostname: unitycatalog
     container_name: unitycatalog
     ports:
@@ -13,10 +13,8 @@ services:
       - type: bind
         source: ./etc/conf/server.properties
         target: /home/unitycatalog/etc/conf/server.properties
-      # todo add a long-term database here since it can 
-      # trip up the process when spinning the environment back up.
-      - type: volume
-        source: unitycatalog_data
+      - type: bind
+        source: ./uc_data
         target: /home/unitycatalog/etc/data
     networks:
       - unity
@@ -25,10 +23,12 @@ services:
     image: marimo-spark:latest
     hostname: marimo-spark
     container_name: marimo-spark
+    environment:
+      - MAVEN_PROXY
     volumes:
       - type: bind
-        source: ./marimo-playground/notebooks/
-        target: /marimo-playground/notebooks/
+        source: ./marimo-playground/notebooks
+        target: /opt/workspace/marimo-playground/notebooks
     ports:
       - "2718:2718"
     networks:
@@ -37,7 +37,3 @@ services:
 networks:
   unity:
     driver: bridge
-
-volumes:
-  # Persist docker volume across container restarts
-  unitycatalog_data:
