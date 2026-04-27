@@ -8,12 +8,6 @@ app = marimo.App(width="medium")
 def _(mo):
     mo.md(r"""
     # Delta 4.2: Unity Catalog Managed Tables Enhancements
-    Before we can begin, we'll need to get Unity Catalog up and running.
-
-    ## Using Docker
-    1. Install `docker` and then run `docker-compose up` - this will configure UC and turn on `server.managed-table.enabled=true` in the server.properties of the Unity Catalog server which allows this new functionality to work.
-    > Note: [colima](https://github.com/abiosoft/colima) is a lightweight container runtime that is docker compatible. It's also Open Source.
-    ---
     """)
     return
 
@@ -74,7 +68,7 @@ def _(
     unity_catalog_server_url,
 ):
     config = {
-        "spark.jars.packages": f"io.delta:delta-spark_{SPARK_VERSION}_2.13:{DELTA_VERSION}," +
+        "spark.jars.packages": f"io.delta:delta-spark_{SPARK_VERSION}_2.13:{DELTA_VERSION},"
         f"io.unitycatalog:unitycatalog-spark_2.13:{UNITY_CATALOG_VERSION}",
         "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
         "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
@@ -411,6 +405,48 @@ def _(other_uc_table, spark: "SparkSession", uc_schema, uc_table):
 @app.cell
 def _(spark: "SparkSession"):
     spark.sql("select * from sanctuary.pets")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## View the Table History
+    If you want to take a look at the RTAS operation, you can easily use `DESCRIBE HISTORY {table_name}` to view the recent transactions.
+
+    ~~~python
+    (
+        spark.sql(f"DESCRIBE HISTORY {uc_schema}.{uc_table} LIMIT 5")
+        .select("version", "operation")
+        .show(truncate=False)
+    )
+    ~~~
+
+    ~~~text
+    +-------+-----------------------+
+    |version|operation              |
+    +-------+-----------------------+
+    |22     |REPLACE TABLE AS SELECT|
+    |21     |WRITE                  |
+    |20     |WRITE                  |
+    |19     |WRITE                  |
+    |18     |WRITE                  |
+    |17     |WRITE                  |
+    |16     |WRITE                  |
+    ...
+    +-------+-----------------------+
+    ~~~
+    """)
+    return
+
+
+@app.cell
+def _(spark: "SparkSession", uc_schema, uc_table):
+    (
+        spark.sql(f"DESCRIBE HISTORY {uc_schema}.{uc_table} LIMIT 5")
+        .select("version", "operation")
+        .show(truncate=False)
+    )
     return
 
 
