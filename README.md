@@ -1,6 +1,7 @@
 # unitycatalog-playground
 This project makes use of the open source Unity Catalog project and introduces a full notebook environment for simplifying how you work with UC OSS.
 
+This project has been moved to [https://github.com/open-lakehouse/unitycatalog-playground](https://github.com/open-lakehouse/unitycatalog-playground). Please visit the new location for updates.
 ---
 
 ## Build the Docker Environment
