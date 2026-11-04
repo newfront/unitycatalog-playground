@@ -31,6 +31,11 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          # Pinned: `uv export` output (e.g. environment markers) can change
+          # between uv releases, which makes `just check-lock` report the
+          # requirements files as stale. Bump deliberately, then run `just lock`.
+          version: "0.13.5"
 
       - name: Validate configuration
         run: |

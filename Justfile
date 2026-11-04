@@ -200,6 +200,36 @@ _reload-uc:
     @test "$(docker wait rustfs-init)" = 0 || { echo "rustfs-init failed; see: docker logs rustfs-init" >&2; exit 1; }
     {{compose}} restart unitycatalog
 
+# ---- Smoke tests ------------------------------------------------------------
+
+# Runs notebooks/iceberg/ci-smoke-iceberg.py headless in the running
+# marimo-iceberg container: create + insert with Spark, read + append with
+# PyIceberg, then count + drop with Spark. Start the stack first (e.g.
+# `just uc=local start`). Passes only if `marimo export` exits 0 AND the
+# notebook printed CI_ICEBERG_SMOKE_OK to the console. Don't grep the HTML: it
+# embeds the notebook source (which contains the marker), so it matches even
+# when the notebook fails, and --no-include-code drops print() output entirely.
+# A 403 / Forbidden from S3 usually means an expired STS credential: run
+# `just uc=local rotate-creds`, then retry.
+# Run the native Iceberg smoke notebook in marimo-iceberg and check for its pass marker.
+smoke-iceberg:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    report=/tmp/ci-smoke-iceberg.html
+    log="$(mktemp)"
+    trap 'rm -f "$log"' EXIT
+    status=0
+    {{compose}} exec -T {{iceberg_service}} marimo export html --force \
+        /opt/workspace/marimo-playground/notebooks/iceberg/ci-smoke-iceberg.py \
+        --output "$report" 2>&1 | tee "$log" || status=$?
+    if [ "$status" -ne 0 ] || ! grep -q CI_ICEBERG_SMOKE_OK "$log"; then
+        echo "" >&2
+        echo "Iceberg smoke test FAILED (marimo export exit ${status}). HTML report: {{iceberg_service}}:${report}" >&2
+        exit 1
+    fi
+    echo ""
+    echo "Iceberg smoke test passed (CI_ICEBERG_SMOKE_OK)."
+
 # ---- Authentication (uc=local) ----------------------------------------------
 # See docs/uc/authentication.md for why these matter and how UC auth works.
 

@@ -236,6 +236,7 @@ the Spark 4.2 `marimo-spark` image.
 ```bash
 just uc=local start   # builds + starts everything, prints both notebook URLs
 just url-iceberg      # http://localhost:2719?access_token=...
+just smoke-iceberg    # run the CI Iceberg smoke notebook (Spark + PyIceberg round trip)
 ```
 
 | Notebook | What it covers |

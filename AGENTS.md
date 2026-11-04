@@ -161,6 +161,7 @@ just ps
 just down                  # stop containers/networks; keep named volumes (alias: just stop)
 just down-volumes          # down + delete named volumes (wipes local UC Postgres + RustFS data)
 just clean                 # down-volumes + delete the local marimo images
+just smoke-iceberg         # run notebooks/iceberg/ci-smoke-iceberg.py in marimo-iceberg (needs the stack up)
 just uc=local rotate-creds # re-mint the RustFS STS credential UC vends + restart UC (after ~12h)
 just uc=local rustfs-url   # print the RustFS console + S3 API URLs
 just uc=local db-upgrade   # once, on a uc_postgres_data volume created by UC 0.6
@@ -399,7 +400,10 @@ Runs on every pull request and on pushes to `main`, against public PyPI and
 Maven Central (no proxies):
 
 1. `just check-lock`: `uv.lock` has no private index URLs, and
-   `requirements.lock` / `requirements-iceberg.lock` match `uv.lock`.
+   `requirements.lock` / `requirements-iceberg.lock` match `uv.lock`. CI pins uv
+   (`setup-uv` `version:`) because `uv export` output can change between uv
+   releases. Export the requirements files with that same uv version, and when
+   bumping the pin, re-run `just lock` and commit the result.
 2. `just uc=local build`, then `just uc=local up-detached`; waits for UC (:8080),
    `marimo-spark` (:2718) and `marimo-iceberg` (:2719).
 3. `marimo export html` runs `notebooks/ci-smoke.py` in `marimo-spark` (prints
@@ -409,9 +413,16 @@ Maven Central (no proxies):
 Run the same smoke tests locally after `just uc=local start`:
 
 ```bash
+just smoke-iceberg   # Iceberg smoke: pass = export exits 0 + CI_ICEBERG_SMOKE_OK in its console output
 docker exec marimo-spark marimo export html /opt/workspace/marimo-playground/notebooks/ci-smoke.py -o /tmp/s.html
-docker exec marimo-iceberg marimo export html /opt/workspace/marimo-playground/notebooks/iceberg/ci-smoke-iceberg.py -o /tmp/i.html
 ```
+
+`marimo export html` exits 1 when a cell fails, and that exit status is the real
+pass/fail signal. Grepping the exported HTML for the marker proves nothing: the
+HTML embeds the notebook source, which contains the marker string, so it
+matches even when the notebook fails. With `--no-include-code`, the HTML drops
+`print()` output entirely. The notebook's `print()` goes to the export
+command's console, which is where `just smoke-iceberg` looks for the marker.
 
 ## Exploring the notebooks
 
