@@ -400,7 +400,10 @@ Runs on every pull request and on pushes to `main`, against public PyPI and
 Maven Central (no proxies):
 
 1. `just check-lock`: `uv.lock` has no private index URLs, and
-   `requirements.lock` / `requirements-iceberg.lock` match `uv.lock`.
+   `requirements.lock` / `requirements-iceberg.lock` match `uv.lock`. CI pins uv
+   (`setup-uv` `version:`) because `uv export` output can change between uv
+   releases. Export the requirements files with that same uv version, and when
+   bumping the pin, re-run `just lock` and commit the result.
 2. `just uc=local build`, then `just uc=local up-detached`; waits for UC (:8080),
    `marimo-spark` (:2718) and `marimo-iceberg` (:2719).
 3. `marimo export html` runs `notebooks/ci-smoke.py` in `marimo-spark` (prints
